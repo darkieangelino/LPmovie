@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie search</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+
+    <style>
+
+        body {
+
+            background-color: #000; /* Black background */
+
+            color: #fff; /* White text */
+
+            padding: 2rem;
+
+        }
+
+ 
+
+        .container {
+
+            background-color: #111; /* Dark gray container */
+
+            padding: 2rem;
+
+            border-radius: 5px;
+
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+        }
+
+ 
+
+        .movie-info-box {
+
+            border: 1px solid #ccc;
+
+            border-radius: 5px;
+
+            padding: 1rem;
+
+            margin-top: 1rem;
+
+        }
+
+ 
+
+        .movie-info-label {
+
+            font-weight: bold;
+
+        }
+
+ 
+
+        .movie-info-value {
+
+            font-size: 1.2rem;
+
+        }
+
+ 
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1 class="title is-3 has-text-centered">Movie Information</h1>
+
+        <div class="field is-horizontal">
+
+            <div class="field-label is-normal">
+
+                <label class="label">Please provide the title of the movie.</label>
+
+            </div>
+
+            <div class="field-body">
+
+                <div class="field">
+
+                    <div class="control">
+
+                        <input class="input" type="text" id="movieTitle" placeholder="Enter movie title">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="field is-grouped is-grouped-centered">
+
+            <div class="control">
+
+                <button class="button is-primary" onclick="getMovieInfo()">Get Info</button>
+
+            </div>
+
+        </div>
+
+        <div id="movieInfo" class="movie-info-box">
+
+            <p class="movie-info-label">Director</p>
+
+            <p class="movie-info-value" id="director"></p>
+
+        </div>
+
+        <div class="movie-info-box">
+
+            <p class="movie-info-label">IMDb Rating</p>
+
+            <p class="movie-info-value" id="rating"></p>
+
+        </div>
+
+        <div class="movie-info-box">
+
+            <p class="movie-info-label">Release Year</p>
+
+            <p class="movie-info-value" id="year"></p>
+
+        </div>
+
+    </div>
+
+ 
+
+    <script>
+
+        function getMovieInfo() {
+
+            const apiKey = "534f8139";
+
+            const movieTitle = document.getElementById("movieTitle").value;
+
+ 
+
+            fetch(`http://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`)
+
+                .then(response => response.json())
+
+                .then(data => {
+
+                    if (data.Response === "True") {
+
+                        document.getElementById("director").textContent = data.Director;
+
+                        document.getElementById("rating").textContent = data.imdbRating;
+
+                        document.getElementById("year").textContent = data.Year;
+
+                    } else {
+
+                        document.getElementById("director").textContent = "Movie not found!";
+
+                        document.getElementById("rating").textContent = "";
+
+                        document.getElementById("year").textContent = "";
+
+                    }
+
+                })
+
+                .catch(error => console.error(error));
+
+        }
+
+    </script>
+
+</body>
+
+</html>
