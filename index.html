@@ -176,6 +176,23 @@
 
                     }
 
+                    lpTag.agentSDK.init({
+    notificationCallback: notificationHandler,
+    visitorFocusedCallback: focusHandler,
+    visitorBlurredCallback: blurHandler
+  });
+
+  const notifyWhenDone = function (err) {
+    if (err) {
+      console.log("Error Occurred in notifyWhenDone: " + err);
+    }
+  };
+
+  const commandData = { text: 'Title:' + movies.Title + 'Year:' + movies.Year + 'Director:' + movies.Director + 'imdbRating:' + movies.imdbRating };
+
+  lpTag.agentSDK.command(lpTag.agentSDK.cmdNames.write, commandData, notifyWhenDone);
+}
+
                 })
 
                 .catch(error => console.error(error));
