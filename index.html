@@ -1,206 +1,188 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Data Fetching and Search Example</title>
+<style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        color: #000; /* Set text color to black */
+      }
 
-    <meta charset="UTF-8">
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      label {
+        font-weight: bold;
+        color: #000; /* Set label text color to black */
+      }
 
-    <title>Movie search</title>
+      input[type="text"] {
+        width: 80%;
+        padding: 8px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #000; /* Set input text color to black */
+      }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+      button {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
 
-    <style>
+      button:hover {
+        background-color: #0056b3;
+      }
 
-        body {
+      #data-container {
+        margin-top: 20px;
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+      }
 
-            background-color: #000; /* Black background */
+      h2 {
+        color: #000; /* Set heading text color to black */
+      }
 
-            color: #fff; /* White text */
+      p {
+        color: #666;
+        line-height: 1.5;
+      }
 
-            padding: 2rem;
+      hr {
+        margin: 10px 0;
+        border: none;
+        border-top: 1px solid #ccc;
+      }
+      .card {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
+      .card h2 {
+        margin-top: 0;
+      }
+
+      @media screen and (max-width: 768px) {
+        input[type="text"],
+        button {
+          width: 100%;
+          margin-right: 0;
+          margin-top: 10px;
         }
-
- 
-
-        .container {
-
-            background-color: #111; /* Dark gray container */
-
-            padding: 2rem;
-
-            border-radius: 5px;
-
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-        }
-
- 
-
-        .movie-info-box {
-
-            border: 1px solid #ccc;
-
-            border-radius: 5px;
-
-            padding: 1rem;
-
-            margin-top: 1rem;
-
-        }
-
- 
-
-        .movie-info-label {
-
-            font-weight: bold;
-
-        }
-
- 
-
-        .movie-info-value {
-
-            font-size: 1.2rem;
-
-        }
-
- 
-
-    </style>
-
+      }
+</style>
 </head>
-
 <body>
+<h1>Movie Information</h1>
+<div>
+<label for="searchInput">Search:</label>
+<input type="text" id="searchInput" />
+<button id="searchButton">Search</button>
+</div>
+<div id="data-container"></div>
 
-    <div class="container">
+<script src="https://lpcdn.lpsnmedia.net/webagent/client-SDK.min.js"></script>
 
-        <h1 class="title is-3 has-text-centered">Movie Information</h1>
+<script>
+      const searchInput = document.getElementById("searchInput");
+      const searchButton = document.getElementById("searchButton");
+      const dataContainer = document.getElementById("data-container");
 
-        <div class="field is-horizontal">
+      // Function to fetch data based on search term
+      function fetchData(searchTerm) {
+        fetch(
+          `https://www.omdbapi.com/?i=tt3896198&apikey=534f8139=${searchTerm}`
+        )
+          .then((response) => response.json())
+          .then((responseData) => {
+            dataContainer.innerHTML = ""; // Clear previous results
+            console.log(responseData);
 
-            <div class="field-label is-normal">
+            if (responseData.length === 0) {
+              dataContainer.innerHTML = "<p>No results found.</p>";
+              return;
+            }
 
-                <label class="label">Please provide the title of the movie.</label>
+            const post = responseData;
+            const postElement = document.createElement("div");
+            postElement.className = "card"; // Apply the 'card' class
+            postElement.innerHTML = `
+<h2>Title: ${post.Title}</h2>
+<p>Year: ${post.Year}</p>
+<p>Ratings: ${post.Ratings[0].Value}</p>
+<p>Type: ${post.Type}</p>
+                        `;
+            dataContainer.appendChild(postElement);
 
-            </div>
+            {
+              var notificationHandler = function (data) {
+                // Do something with the notifications
+              };
 
-            <div class="field-body">
+              var focusHandler = function () {
+                // Do something when the visitor is focused
+                // Assume the visitor is focused to begin with
+              };
 
-                <div class="field">
+              var blurHandler = function () {
+                // Do something when the visitor is blurred
+                // Assume the visitor is focused to begin with
+              };
+            }
+            lpTag.agentSDK.init({
+              notificationCallback: notificationHandler,
+              visitorFocusedCallback: focusHandler,
+              visitorBlurredCallback: blurHandler,
+            });
+            const notifyWhenDone = function (err) {
+              if (err) {
+                console.log("Error occurred in notifyWhenDone: " + err);
+              }
+            };
+            const commandData = {
+              text: "Title: " + post.Title + ", Year: " + post.Year,
+            };
+            lpTag.agentSDK.command(
+              lpTag.agentSDK.cmdNames.write,
+              commandData,
+              notifyWhenDone
+            );
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+        searchInput.value = ""; // Clear the input after search
+      }
 
-                    <div class="control">
-
-                        <input class="input" type="text" id="movieTitle" placeholder="Enter movie title">
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="field is-grouped is-grouped-centered">
-
-            <div class="control">
-
-                <button class="button is-primary" onclick="getMovieInfo()">Get Info</button>
-
-            </div>
-
-        </div>
-
-        <div id="movieInfo" class="movie-info-box">
-
-            <p class="movie-info-label">Director</p>
-
-            <p class="movie-info-value" id="director"></p>
-
-        </div>
-
-        <div class="movie-info-box">
-
-            <p class="movie-info-label">IMDb Rating</p>
-
-            <p class="movie-info-value" id="rating"></p>
-
-        </div>
-
-        <div class="movie-info-box">
-
-            <p class="movie-info-label">Release Year</p>
-
-            <p class="movie-info-value" id="year"></p>
-
-        </div>
-
-    </div>
-
- 
-
-    <script>
-
-        function getMovieInfo() {
-
-            const apiKey = "534f8139";
-
-            const movieTitle = document.getElementById("movieTitle").value;
-
- 
-
-            fetch(`https://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`)
-
-                .then(response => response.json())
-
-                .then(data => {
-
-                    if (data.Response === "True") {
-
-                        document.getElementById("director").textContent = data.Director;
-
-                        document.getElementById("rating").textContent = data.imdbRating;
-
-                        document.getElementById("year").textContent = data.Year;
-
-                    } else {
-
-                        document.getElementById("director").textContent = "Movie not found!";
-
-                        document.getElementById("rating").textContent = "";
-
-                        document.getElementById("year").textContent = "";
-
-                    }
-
-                    lpTag.agentSDK.init({
-    notificationCallback: notificationHandler,
-    visitorFocusedCallback: focusHandler,
-    visitorBlurredCallback: blurHandler
-  });
-
-  const notifyWhenDone = function (err) {
-    if (err) {
-      console.log("Error Occurred in notifyWhenDone: " + err);
-    }
-  };
-
-  const commandData = { text: 'Title:' + movies.Title + 'Year:' + movies.Year + 'Director:' + movies.Director + 'imdbRating:' + movies.imdbRating };
-
-  lpTag.agentSDK.command(lpTag.agentSDK.cmdNames.write, commandData, notifyWhenDone);
-}
-
-                })
-
-                .catch(error => console.error(error));
-
+      function performSearch() {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm !== "") {
+          fetchData(searchTerm);
         }
+      }
 
-    </script>
+      searchButton.addEventListener("click", performSearch);
 
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          performSearch();
+          event.preventDefault(); // Prevent form submission
+        }
+      });
+</script>
 </body>
-
 </html>
