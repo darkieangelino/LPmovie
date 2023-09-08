@@ -1,145 +1,124 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Movie search</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
-
-    <style>
-
-        body {
-
-            background-color: #000; /* Black background */
-
-            color: #fff; /* White text */
-
-            padding: 2rem;
-
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Data Fetching and Search Example</title>
+<style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #000; /* Black background */
+        color: #fff; /* White text */
+      }
 
  
 
-        .container {
-
-            background-color: #111; /* Dark gray container */
-
-            padding: 2rem;
-
-            border-radius: 5px;
-
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-        }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
  
 
-        .movie-info-box {
-
-            border: 1px solid #ccc;
-
-            border-radius: 5px;
-
-            padding: 1rem;
-
-            margin-top: 1rem;
-
-        }
+      label {
+        font-weight: bold;
+      }
 
  
 
-        .movie-info-label {
-
-            font-weight: bold;
-
-        }
-
- 
-
-        .movie-info-value {
-
-            font-size: 1.2rem;
-
-        }
+      input[type="text"] {
+        width: 80%;
+        padding: 8px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #111; /* Dark gray input background */
+        color: #fff; /* White text color */
+      }
 
  
 
-    </style>
+      button {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #111; /* Dark gray button background */
+      }
 
+ 
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+ 
+
+      #data-container {
+        margin-top: 20px;
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+      }
+
+ 
+
+      h2 {
+        color: #333;
+      }
+
+ 
+
+      p {
+        color: #666;
+        line-height: 1.5;
+      }
+
+ 
+
+      hr {
+        margin: 10px 0;
+        border: none;
+        border-top: 1px solid #ccc;
+      }
+      .card {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #111; /* Dark gray card background */
+      }
+
+ 
+
+      .card h2 {
+        margin-top: 0;
+      }
+      @media screen and (max-width: 768px) {
+        input[type="text"],
+        button {
+          width: 100%;
+          margin-right: 0;
+          margin-top: 10px;
+        }
+      }
+</style>
 </head>
-
 <body>
+<h1>Movie Information</h1>
+<div>
+<label for="searchInput">Search:</label>
+<input type="text" id="searchInput" />
+<button id="searchButton">Search</button>
+</div>
+<div id="data-container"></div>
 
-    <div class="container">
+ 
 
-        <h1 class="title is-3 has-text-centered">Movie Information</h1>
-
-        <div class="field is-horizontal">
-
-            <div class="field-label is-normal">
-
-                <label class="label">Please provide the title of the movie.</label>
-
-            </div>
-
-            <div class="field-body">
-
-                <div class="field">
-
-                    <div class="control">
-
-                        <input class="input" type="text" id="movieTitle" placeholder="Enter movie title">
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="field is-grouped is-grouped-centered">
-
-            <div class="control">
-
-                <button class="button is-primary" onclick="getMovieInfo()">Get Info</button>
-
-            </div>
-
-        </div>
-
-        <div id="movieInfo" class="movie-info-box">
-
-            <p class="movie-info-label">Director</p>
-
-            <p class="movie-info-value" id="director"></p>
-
-        </div>
-
-        <div class="movie-info-box">
-
-            <p class="movie-info-label">IMDb Rating</p>
-
-            <p class="movie-info-value" id="rating"></p>
-
-        </div>
-
-        <div class="movie-info-box">
-
-            <p class="movie-info-label">Release Year</p>
-
-            <p class="movie-info-value" id="year"></p>
-
-        </div>
-
-    </div>
-  
     <script src="https://lpcdn.lpsnmedia.net/webagent/client-SDK.min.js"></script>
 
  
@@ -154,7 +133,7 @@
       // Function to fetch data based on search term
       function fetchData(searchTerm) {
         fetch(
-          `https://www.omdbapi.com/?i=tt3896198&apikey=534f8139&t=${searchTerm}`
+          `https://www.omdbapi.com/?i=tt3896198&apikey=ee1dfade&t=${searchTerm}`
         )
           .then((response) => response.json())
           .then((responseData) => {
@@ -209,7 +188,7 @@
             });
             const notifyWhenDone = function (err) {
               if (err) {
-                console.log("Error occured in notifyWhenDone: " + err);
+                console.log("Error occurred in notifyWhenDone: " + err);
               }
             };
             const commandData = {
@@ -235,7 +214,10 @@
           fetchData(searchTerm);
         }
       }
-       searchButton.addEventListener("click", performSearch);
+
+ 
+
+      searchButton.addEventListener("click", performSearch);
 
  
 
@@ -246,12 +228,5 @@
         }
       });
 </script>
-
-<script src="https://lpcdn.lpsnmedia.net/webagent/client-SDK.min.js"></script>
-    
-
 </body>
-
 </html>
-
-
